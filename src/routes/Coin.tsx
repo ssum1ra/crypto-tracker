@@ -1,12 +1,11 @@
 import { useParams, useLocation } from "react-router";
 import { styled } from "styled-components";
 import { useState, useEffect } from "react";
-import { Outlet, Link, useMatch } from "react-router-dom";
+import { Outlet, Link, useMatch, useOutletContext } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Helmet } from "react-helmet";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { AiFillHome } from 'react-icons/ai';
-
 
 const Container = styled.div`
     padding: 0px 20px;
@@ -34,7 +33,7 @@ const Loader = styled.span`
 const Overview = styled.div`
     display: flex;
     justify-content: space-between;
-    background-color: ${props=>props.theme.blockColor};
+    background-color: ${props=>props.theme.cardBgColor};
     padding: 10px 20px;
     border-radius: 10px;
 `;
@@ -56,7 +55,7 @@ const Description = styled.div`
     display: flex;
     flex-direction: column;
     padding: 10px 20px;
-    background-color: ${props=>props.theme.blockColor};
+    background-color: ${props=>props.theme.cardBgColor};
     border-radius: 10px;
     margin: 20px 0px;
     h1 {
@@ -82,7 +81,7 @@ const Tab = styled.span<{ isActive: boolean }>`
     text-transfrom: uppercase;
     font-size: 12px;
     font-weight: 400;
-    background-color: ${props=>props.theme.blockColor};
+    background-color: ${props=>props.theme.cardBgColor};
     padding: 7px 0px;
     border-radius: 10px;
     color: ${props => props.isActive ? props.theme.accentColor : props.theme.textColor};
@@ -154,6 +153,8 @@ interface PriceData {
     };
 }
 
+interface IToggleDark {}
+
 function Coin() {
     const { coinId } = useParams();
     const { state } = useLocation() as RouteState;
@@ -205,7 +206,7 @@ function Coin() {
                         </OverviewItem>
                         <OverviewItem>
                             <span>Price:</span>
-                            <span>{tickersData?.quotes.USD.price.toFixed(3)}</span>
+                            <span>${tickersData?.quotes?.USD?.price?.toFixed(3)}</span>
                         </OverviewItem>
                     </Overview>
                     <Description>
@@ -232,7 +233,7 @@ function Coin() {
                         </Tab>
                     </Tabs>
                     
-                    <Outlet context={{coinId}}/>
+                    <Outlet context={{ coinId }}/>
 
                     <Home>
                         <Link to={"/"}><AiFillHome size="20" /></Link>
